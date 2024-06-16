@@ -22,167 +22,176 @@ import java.awt.event.ActionEvent;
 
 public class Prikaz_Oglasa extends JDialog {
 
-	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
-	private ArrayList<String> favorites = new ArrayList<>();
+    private static final long serialVersionUID = 1L;
+    private final JPanel contentPanel = new JPanel();
+    private ArrayList<String> favorites = new ArrayList<>();
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			Prikaz_Oglasa dialog = new Prikaz_Oglasa();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        try {
+            Prikaz_Oglasa dialog = new Prikaz_Oglasa();
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	public static void newscreen() {
-		try {
-			Prikaz_Oglasa dialog = new Prikaz_Oglasa();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public static void newscreen() {
+        try {
+            Prikaz_Oglasa dialog = new Prikaz_Oglasa();
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * Create the dialog.
-	 */
-	public Prikaz_Oglasa() {
-		setTitle("Prikaz Oglasa");
-		setBounds(100, 100, 650, 385);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+    /**
+     * Create the dialog.
+     */
+    public Prikaz_Oglasa() {
+        setTitle("Prikaz Oglasa");
+        setBounds(100, 100, 650, 385);
+        getContentPane().setLayout(new BorderLayout());
+        contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        getContentPane().add(contentPanel, BorderLayout.CENTER);
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-		JScrollPane scrollPane = new JScrollPane(contentPanel);
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
 
-		JPanel buttonPane = new JPanel();
-		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-		
-		JButton prikaziFavoriteButton = new JButton("Prikazi Favorite");
-		prikaziFavoriteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showFavorites();
-			}
-		});
-		buttonPane.add(prikaziFavoriteButton);
-		
-		JButton okButton = new JButton("Close");
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
-		okButton.setActionCommand("OK");
-		buttonPane.add(okButton);
-		getRootPane().setDefaultButton(okButton);
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        
+        JButton prikaziFavoriteButton = new JButton("Prikazi Favorite");
+        prikaziFavoriteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showFavorites();
+            }
+        });
+        buttonPane.add(prikaziFavoriteButton);
+        
+        JButton okButton = new JButton("Close");
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+        okButton.setActionCommand("OK");
+        buttonPane.add(okButton);
+        getRootPane().setDefaultButton(okButton);
 
-		selectPrikazOglasa();
-	}
+        selectPrikazOglasa();
+    }
 
-	private void selectPrikazOglasa() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-			Connection conn = DriverManager.getConnection("jdbc:mysql://ucka.veleri.hr/pmocibob?user=pmocibob&password=11");
+    private void selectPrikazOglasa() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+            Connection conn = DriverManager.getConnection("jdbc:mysql://ucka.veleri.hr/pmocibob?user=pmocibob&password=11");
 
-			String sql = "SELECT * FROM Nekretnina_na_oglasu";
-			java.sql.Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
+            String sql = "SELECT * FROM Nekretnina_na_oglasu";
+            java.sql.Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
 
-			while (rs.next()) {
-				JPanel listingPanel = new JPanel();
-				listingPanel.setLayout(new BorderLayout());
+            while (rs.next()) {
+                JPanel listingPanel = new JPanel();
+                listingPanel.setLayout(new BorderLayout());
 
-				final String tekst = "Sifra: " + rs.getString("Sifra_oglasa") + "\t" +
-						"Adresa: " + rs.getString("Adresa_nekretnine") + "\t" +
-						"Kvadratura: " + rs.getString("Kvadratura_nekretnine") + "\t" +
-						"Cijena: " + rs.getString("Cijena_nekretnine") + "\t" +
-						"Opis: " + rs.getString("Opis_nekretnine") + "\t" +
-						"Tip: " + rs.getString("Tip_nekretnine") + "\t" +
-						"Datum_objave: " + rs.getString("Datum_objave_oglasa") + "\t" +
-						"Datum_isteka: " + rs.getString("Datum_isteka_oglasa") + "\n";
+                final String sifra = rs.getString("Sifra_oglasa");
+                final String adresa = rs.getString("Adresa_nekretnine");
+                final String kvadratura = rs.getString("Kvadratura_nekretnine");
+                final String cijena = rs.getString("Cijena_nekretnine");
+                final String opis = rs.getString("Opis_nekretnine");
+                final String tip = rs.getString("Tip_nekretnine");
+                final String datumObjave = rs.getString("Datum_objave_oglasa");
+                final String datumIsteka = rs.getString("Datum_isteka_oglasa");
 
-				JTextArea textArea = new JTextArea(tekst);
-				textArea.setEditable(false);
-				listingPanel.add(textArea, BorderLayout.CENTER);
+                final String tekst = "Sifra: " + sifra + "\t" +
+                        "Adresa: " + adresa + "\t" +
+                        "Kvadratura: " + kvadratura + "\t" +
+                        "Cijena: " + cijena + "\t" +
+                        "Opis: " + opis + "\t" +
+                        "Tip: " + tip + "\t" +
+                        "Datum_objave: " + datumObjave + "\t" +
+                        "Datum_isteka: " + datumIsteka + "\n";
 
-				JButton favoriteButton = new JButton("☆");
-				favoriteButton.setPreferredSize(new Dimension(150, 25)); 
-				favoriteButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						favorites.add(tekst);
-						addToFavorites(rs);
-						JOptionPane.showMessageDialog(null, "Dodano u  favorite!", "Information", JOptionPane.INFORMATION_MESSAGE);
-					}
-				});
-				listingPanel.add(favoriteButton, BorderLayout.EAST);
+                JTextArea textArea = new JTextArea(tekst);
+                textArea.setEditable(false);
+                listingPanel.add(textArea, BorderLayout.CENTER);
 
-				contentPanel.add(listingPanel);
-			}
+                JButton favoriteButton = new JButton("☆");
+                favoriteButton.setPreferredSize(new Dimension(150, 25)); 
+                favoriteButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        favorites.add(tekst);
+                        addToFavorites(sifra, adresa, kvadratura, cijena, opis, tip, datumObjave, datumIsteka);
+                        JOptionPane.showMessageDialog(null, "Dodano u favorite!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                });
+                listingPanel.add(favoriteButton, BorderLayout.EAST);
 
-			conn.close();
+                contentPanel.add(listingPanel);
+            }
 
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
-		}
-	}
+            conn.close();
 
-	private void addToFavorites(ResultSet rs) {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-			Connection conn = DriverManager.getConnection("jdbc:mysql://ucka.veleri.hr/pmocibob?user=pmocibob&password=11");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
-			String sql = "INSERT INTO Favoriti (Sifra_oglasa, Adresa_nekretnine, Kvadratura_nekretnine, Cijena_nekretnine, Opis_nekretnine, Tip_nekretnine, Datum_objave_oglasa, Datum_isteka_oglasa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setString(1, rs.getString("Sifra_oglasa"));
-			stmt.setString(2, rs.getString("Adresa_nekretnine"));
-			stmt.setString(3, rs.getString("Kvadratura_nekretnine"));
-			stmt.setString(4, rs.getString("Cijena_nekretnine"));
-			stmt.setString(5, rs.getString("Opis_nekretnine"));
-			stmt.setString(6, rs.getString("Tip_nekretnine"));
-			stmt.setString(7, rs.getString("Datum_objave_oglasa"));
-			stmt.setString(8, rs.getString("Datum_isteka_oglasa"));
+    private void addToFavorites(String sifra, String adresa, String kvadratura, String cijena, String opis, String tip, String datumObjave, String datumIsteka) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+            Connection conn = DriverManager.getConnection("jdbc:mysql://ucka.veleri.hr/pmocibob?user=pmocibob&password=11");
 
-			stmt.execute();
-			conn.close();
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
-		}
-	}
+            String sql = "INSERT INTO Favoriti (Sifra_oglasa, Adresa_nekretnine, Kvadratura_nekretnine, Cijena_nekretnine, Opis_nekretnine, Tip_nekretnine, Datum_objave_oglasa, Datum_isteka_oglasa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, sifra);
+            stmt.setString(2, adresa);
+            stmt.setString(3, kvadratura);
+            stmt.setString(4, cijena);
+            stmt.setString(5, opis);
+            stmt.setString(6, tip);
+            stmt.setString(7, datumObjave);
+            stmt.setString(8, datumIsteka);
 
-	private void showFavorites() {
-		JDialog favoritesDialog = new JDialog(this, "Favoriti", true);
-		favoritesDialog.setBounds(100, 100, 650, 385);
-		favoritesDialog.setLayout(new BorderLayout());
+            stmt.execute();
+            conn.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
-		JTextArea textArea = new JTextArea();
-		for (String favorite : favorites) {
-			textArea.append(favorite + "\n");
-		}
-		textArea.setEditable(false);
+    private void showFavorites() {
+        JDialog favoritesDialog = new JDialog(this, "Favoriti", true);
+        favoritesDialog.setBounds(100, 100, 650, 385);
+        favoritesDialog.setLayout(new BorderLayout());
 
-		JScrollPane scrollPane = new JScrollPane(textArea);
-		favoritesDialog.add(scrollPane, BorderLayout.CENTER);
+        JTextArea textArea = new JTextArea();
+        for (String favorite : favorites) {
+            textArea.append(favorite + "\n");
+        }
+        textArea.setEditable(false);
 
-		JPanel buttonPane = new JPanel();
-		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton closeButton = new JButton("Close");
-		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				favoritesDialog.dispose();
-			}
-		});
-		buttonPane.add(closeButton);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        favoritesDialog.add(scrollPane, BorderLayout.CENTER);
 
-		favoritesDialog.add(buttonPane, BorderLayout.SOUTH);
-		favoritesDialog.setVisible(true);
-	}
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                favoritesDialog.dispose();
+            }
+        });
+        buttonPane.add(closeButton);
+
+        favoritesDialog.add(buttonPane, BorderLayout.SOUTH);
+        favoritesDialog.setVisible(true);
+    }
 }
